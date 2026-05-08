@@ -203,17 +203,46 @@ body{
 
 /* Product modal */
 #productModal{
-  display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:3000;
-  align-items:center;justify-content:center;padding:20px;
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.88);
+  z-index:3000;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  overflow-y:auto;
 }
 .modal-box{
-  width:min(1000px,100%);
-  background:#0b0b0b;border:1px solid rgba(255,255,255,0.1);
-  border-radius:25px;padding:25px;position:relative;
+  width:min(1000px,95%);
+  max-height:90vh;
+  overflow-y:auto;
+  background:#0b0b0b;
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:25px;
+  padding:25px;
+  position:relative;
 }
 .modal-close{
-  position:absolute;top:15px;right:15px;background:none;border:none;color:white;
-  font-size:2rem;cursor:pointer;
+  position:absolute;
+  top:15px;
+  right:15px;
+  background:none;
+  border:none;
+  color:white;
+  font-size:2rem;
+  cursor:pointer;
+  padding:6px 12px;
+  border-radius:12px;
+  transition:0.25s;
+}
+.modal-close:hover{
+  background:rgba(0,229,255,0.15);
+  color:var(--cyan);
+}
+.modal-close:active{
+  background:var(--lime);
+  color:black;
 }
 .modal-images{
   display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin-bottom:20px;
@@ -245,6 +274,18 @@ footer{padding:40px;text-align:center;color:#666;}
   .logo-text{font-size:1.2rem;}
   .sidebar{width:100vw;right:-100vw;padding:120px 30px 30px;}
 }
+@media(max-width:768px){
+  .modal-box{
+    width:95%;
+    padding:15px;
+  }
+  .modal-images{
+    grid-template-columns:1fr;
+  }
+  .modal-images img{
+    height:180px;
+  }
+}
 </style>
 </head>
 <body>
@@ -270,7 +311,7 @@ footer{padding:40px;text-align:center;color:#666;}
 
 <nav class="navbar" id="navbar">
   <div class="logo">
-    <img src="image1.jpg.jpg"KEF Muscle Store">
+    <img src="file_00000000c9a471f496e2eaa26608ff3a" alt="KEF Muscle Store">
     <div class="logo-text">KEF <span>Muscle</span><br> Store</div>
   </div>
 
@@ -333,7 +374,7 @@ footer{padding:40px;text-align:center;color:#666;}
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal()">×</button>
     <div class="modal-images">
-      <img id="modalImg1" src="image1.jpg.jpg">
+      <img id="modalImg1" src="">
       <img id="modalImg2" src="">
       <img id="modalImg3" src="">
     </div>
@@ -427,7 +468,7 @@ document.querySelectorAll('.quiz-btn').forEach(btn=>{
 });
 
 const products = [
-  {id:1,name:'BPI Sports Best Creatine',icon:'fas fa-bolt',price:120,category:'Créatine',images:['a.jpg','aa.jpg','aaa.jpg'],desc:'rr.'},                                                                        
+  {id:1,name:'BPI Sports Best Creatine',icon:'fas fa-bolt',price:120,category:'Créatine',images:['img1.jpg','img2.jpg','img3.jpg'],desc:'ضع وصف المنتج هنا.'},
   {id:2,name:'Optimum Nutrition Creatine',icon:'fas fa-bolt',price:100,category:'Créatine',images:['img1.jpg','img2.jpg','img3.jpg'],desc:'ضع وصف المنتج هنا.'},
   {id:3,name:'Kevin Levrone Gold Creatine',icon:'fas fa-bolt',price:90,category:'Créatine',images:['img1.jpg','img2.jpg','img3.jpg'],desc:'ضع وصف المنتج هنا.'},
   {id:4,name:'GSN Creatine Grand Format',icon:'fas fa-bolt',price:85,category:'Créatine',images:['img1.jpg','img2.jpg','img3.jpg'],desc:'ضع وصف المنتج هنا.'},
@@ -477,6 +518,9 @@ function openModal(product){
   document.getElementById('productModal').style.display = 'flex';
 }
 function closeModal(){ document.getElementById('productModal').style.display = 'none'; }
+document.getElementById('productModal').addEventListener('click', function(e){
+  if(e.target === this) closeModal();
+});
 
 function addSelectedToCart(){
   const qty = parseInt(document.getElementById('modalQty').value) || 1;
