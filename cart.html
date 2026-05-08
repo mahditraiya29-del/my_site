@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panier - KEF Muscle Store</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
+body{
+  background:#050505;
+  color:white;
+  min-height:100vh;
+  padding:30px 6%;
+}
+h1{
+  color:#00e5ff;
+  margin-bottom:30px;
+  text-shadow:0 0 15px #00e5ff;
+}
+.cart-list{
+  display:grid;
+  gap:20px;
+  max-width:1000px;
+  margin:auto;
+}
+.cart-item{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:20px;
+  padding:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+  flex-wrap:wrap;
+}
+.cart-left{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+.cart-img{
+  width:80px;
+  height:80px;
+  border-radius:15px;
+  object-fit:cover;
+  background:#111;
+}
+.cart-info h3{
+  color:#00e5ff;
+  margin-bottom:8px;
+}
+.cart-info p{
+  color:#bbb;
+  margin-bottom:5px;
+}
+.qty-controls{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:10px;
+}
+.qty-controls button{
+  width:34px;
+  height:34px;
+  border:none;
+  border-radius:50%;
+  cursor:pointer;
+  background:#00e5ff;
+  color:black;
+  font-weight:bold;
+}
+.delete-btn{
+  background:#ff3b3b;
+  color:white;
+  border:none;
+  border-radius:12px;
+  padding:10px 16px;
+  cursor:pointer;
+  font-weight:bold;
+}
+.total-box{
+  max-width:1000px;
+  margin:30px auto 0;
+  font-size:1.5rem;
+  color:#c6ff00;
+  font-weight:bold;
+  text-align:right;
+}
+.back-btn{
+  display:inline-block;
+  margin-bottom:20px;
+  text-decoration:none;
+  color:#00e5ff;
+  border:1px solid #00e5ff;
+  padding:10px 16px;
+  border-radius:12px;
+}
+.empty{
+  text-align:center;
+  color:#888;
+  margin-top:60px;
+  font-size:1.2rem;
+}
+</style>
+</head>
+<body>
+
+<a class="back-btn" href="index.html"><i class="fas fa-arrow-left"></i> Retour</a>
+<h1>Votre Panier</h1>
+
+<div id="cartList" class="cart-list"></div>
+<div id="totalBox" class="total-box"></div>
+
+<script>
+let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+
+function saveCart(){
+  localStorage.setItem('cartItems', JSON.stringify(cartItems));
+}
+
+function renderCart(){
+  const cartList = document.getElementById('cartList');
+  const totalBox = document.getElementById('totalBox');
+
+  if(cartItems.length === 0){
+    cartList.innerHTML = '<div class="empty">Panier vide</div>';
+    totalBox.textContent = '';
+    return;
+  }
+
+  cartList.innerHTML = cartItems.map((item, index) => `
+    <div class="cart-item">
+      <div class="cart-left">
+        <img class="cart-img" src="${item.images?.[0] || ''}" alt="${item.name}">
+        <div class="cart-info">
+          <h3>${item.name}</h3>
+          <p>Prix unitaire: ${item.price} DT</p>
+          <p>Total: ${item.price * item.qty} DT</p>
+          <div class="qty-controls">
+            <button onclick="decreaseQty(${index})">-</button>
+            <span>Quantité: ${item.qty}</span>
+            <button onclick="increaseQty(${index})">+</button>
+          </div>
+        </div>
+      </div>
+      <button class="delete-btn" onclick="removeItem(${index})">Supprimer</button>
+    </div>
+  `).join('');
+
+  const total = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
+  totalBox.textContent = 'Total: ' + total + ' DT';
+}
+
+function increaseQty(index){
+  cartItems[index].qty += 1;
+  saveCart();
+  renderCart();
+}
+
+function decreaseQty(index){
+  if(cartItems[index].qty > 1){
+    cartItems[index].qty -= 1;
+  }else{
+    cartItems.splice(index, 1);
+  }
+  saveCart();
+  renderCart();
+}
+
+function removeItem(index){
+  cartItems.splice(index, 1);
+  saveCart();
+  renderCart();
+}
+
+renderCart();
+</script>
+
+</body>
+</html>
